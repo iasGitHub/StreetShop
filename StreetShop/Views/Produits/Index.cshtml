@@ -1,0 +1,83 @@
+﻿@model PagedList.IPagedList<GestionStock.Models.Produit>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Liste des produits</h2>
+
+<p>
+    <a class="btn btn-success" href="@Url.Action("")"> Download Report</a>
+</p>
+    @using (Html.BeginForm())
+    {
+
+        <div class="form-group">
+            <div class="row">
+
+                <div class="col-md-4">
+                    DESIGNATION: @Html.TextBox("designation", ViewBag.designation as string, new { @class = "form-control" })
+                </div>
+                <div class="col-md-4">
+                    DATE PEREMPTION: @Html.TextBox("datePeremption", ViewBag.datePeremption as string, new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="col-md-4">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Rechercher" class="btn btn-default" style="color:black;background-color:cyan" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <p>
+        @Html.ActionLink("Nouveau produit", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Designation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().QteStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().QteMin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().DatePeremption)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Designation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QteStock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QteMin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DatePeremption)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.IdProduit }, new { @style = "color:Gold;font-size:20px;" }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.IdProduit }, new { @style = "color:MediumSpringGreen;font-size:20px;" }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.IdProduit }, new { @style = "color:Red;font-size:20px;" })
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
